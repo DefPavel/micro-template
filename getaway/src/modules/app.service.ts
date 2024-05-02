@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ITEM_MICROSERVICE } from '../common/constants';
 import { ClientProxy } from '@nestjs/microservices';
-import { CreateItemDto } from './item.dto';
+import { CreateItemDto } from './dto/item.dto';
 
 @Injectable()
 export class AppService {
