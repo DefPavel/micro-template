@@ -1,0 +1,19 @@
+# stage 1 (build)
+FROM node:20.11-alpine AS development
+WORKDIR /var/www/api
+COPY *.json ./
+COPY ./src ./src
+COPY ./src/public ./dist/public
+RUN npm i && npm run build
+
+# stage 2 (start dist)
+FROM node:20.11-alpine AS production
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+WORKDIR /var/www/api
+COPY --from=development /var/www/api/dist ./dist
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+EXPOSE 8080
+ENTRYPOINT ["node", "dist/main"]

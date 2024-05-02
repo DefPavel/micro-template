@@ -1,0 +1,4 @@
+FROM node:20.11-alpine
+WORKDIR /var/www/api
+ENTRYPOINT ["npm", "run", "start:debug"]
+EXPOSE 8080
