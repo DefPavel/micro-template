@@ -1,18 +1,29 @@
 version: '3.7'
 services:
-  # application
+  # gataway
+  gataway-application:
+  container_name: getaway_application
+  restart: 'unless-stopped'
+  build:
+    context: './micro/'
+    dockerfile: 'Dockerfile.dev'
+  ports:
+    - ${APPLICATION_PORT}:8080
+  networks:
+    - microservice-network
+  volumes:
+    - './:/var/www/api/gataway'
+  # micro-service
   micro-application:
     container_name: microservice_application
     restart: 'unless-stopped'
     build:
-      context: '.'
+      context: './micro/'
       dockerfile: 'Dockerfile.dev'
-    ports:
-      - ${APPLICATION_PORT}:8080
     networks:
       - microservice-network
     volumes:
-      - './:/var/www/api'
+      - './:/var/www/api/micro'
   # DataBase
   postgres:
     container_name: microservice_postgres
