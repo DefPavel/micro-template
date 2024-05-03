@@ -5,9 +5,7 @@ import { CreateItemDto } from './dto/item.dto';
 
 @Injectable()
 export class AppService {
-  constructor(
-    @Inject(ITEM_MICROSERVICE) private readonly client: ClientProxy,
-  ) {}
+  constructor(@Inject(ITEM_MICROSERVICE) private readonly client: ClientProxy) {}
 
   createItem(createItemDto: CreateItemDto) {
     return this.client.send({ role: 'item', cmd: 'create' }, createItemDto);

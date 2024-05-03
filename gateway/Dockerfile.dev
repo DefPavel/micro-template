@@ -1,4 +1,4 @@
 FROM node:20.11-alpine
-WORKDIR /var/www/api/getaway
+WORKDIR /var/www/api/gateway
 ENTRYPOINT ["npm", "run", "start:debug"]
 EXPOSE 8080

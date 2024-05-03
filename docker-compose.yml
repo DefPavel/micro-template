@@ -1,44 +1,80 @@
 version: '3.7'
 services:
-  # gataway
-  gataway-application:
-  container_name: getaway_application
-  restart: 'unless-stopped'
-  build:
-    context: './micro/'
-    dockerfile: 'Dockerfile.dev'
-  ports:
-    - ${APPLICATION_PORT}:8080
-  networks:
-    - microservice-network
-  volumes:
-    - './:/var/www/api/gataway'
-  # micro-service
-  micro-application:
-    container_name: microservice_application
-    restart: 'unless-stopped'
+  # gateway
+  gateway-application:
+    container_name: gateway_application
+    restart: unless-stopped
     build:
-      context: './micro/'
+      context: './gateway/'
       dockerfile: 'Dockerfile.dev'
+    ports:
+      - '${APPLICATION_PORT}:8080'
     networks:
       - microservice-network
     volumes:
-      - './:/var/www/api/micro'
-  # DataBase
-  postgres:
-    container_name: microservice_postgres
-    restart: 'unless-stopped'
-    image: postgres:${POSTGRES_VERSION}
+      - './gateway:/var/www/api/gateway'
+
+  # micro-service
+  micro-application:
+    container_name: microservice_application
+    restart: unless-stopped
+    build:
+      context: './micro/'
+      dockerfile: 'Dockerfile.dev'
     environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - NODE_ENV=${NODE_ENV}
+    networks:
+      - microservice-network
+    depends_on:
+      - db
+    volumes:
+      - './micro:/var/www/api/micro'
+
+  # DataBase
+  db:
+    container_name: microservice_postgres
+    restart: unless-stopped
+    image: postgres:14.8-alpine3.18
+    environment:
+      - TZ=Europe/Moscow
       - POSTGRES_USER=${POSTGRES_USERNAME}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DATABASE}
     ports:
-      - ${POSTGRES_PORT}:5432
+      - '${POSTGRES_PORT}:5432'
     volumes:
-      - /data/postgres/
+      - docker-postgres:/var/lib/postgresql/data
     networks:
       - microservice-network
+
+  # Web gui pg
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:7.2
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'root@root.com'
+      PGADMIN_DEFAULT_PASSWORD: 'root'
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_LISTEN_ADDRESS: '0.0.0.0'
+      PGADMIN_LISTEN_PORT: '5051'
+    volumes:
+      - docker-pgadmin:/var/lib/pgadmin
+    networks:
+      - microservice-network
+    ports:
+      - '5051:5051'
+    restart: unless-stopped
+    depends_on:
+      - db
+
+volumes:
+  docker-postgres:
+  docker-pgadmin:
 
 networks:
   microservice-network:
