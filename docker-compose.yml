@@ -1,39 +1,41 @@
 version: '3.7'
 services:
   # gateway
-  gateway-application:
-    container_name: gateway_application
-    restart: unless-stopped
-    build:
-      context: './gateway/'
-      dockerfile: 'Dockerfile.dev'
-    ports:
-      - '${APPLICATION_PORT}:8080'
-    networks:
-      - microservice-network
-    volumes:
-      - './gateway:/var/www/api/gateway'
+  #  gateway-application:
+  #    container_name: gateway_application
+  #    restart: unless-stopped
+  #    build:
+  #      context: './gateway/'
+  #      dockerfile: 'Dockerfile.dev'
+  #    ports:
+  #      - '127.0.0.1:3001:3001'
+  #    networks:
+  #      - microservice-network
+  #    volumes:
+  #      - './gateway:/var/www/api/gateway'
 
   # micro-service
-  micro-application:
-    container_name: microservice_application
-    restart: unless-stopped
-    build:
-      context: './micro/'
-      dockerfile: 'Dockerfile.dev'
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - NODE_ENV=${NODE_ENV}
-    networks:
-      - microservice-network
-    depends_on:
-      - db
-    volumes:
-      - './micro:/var/www/api/micro'
+  #  micro-application:
+  #    container_name: microservice_application
+  #    restart: unless-stopped
+  #    build:
+  #      context: './micro/'
+  #      dockerfile: 'Dockerfile.dev'
+  #    environment:
+  #      - POSTGRES_HOST=db
+  #      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
+  #      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  #      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+  #      - POSTGRES_PORT=${POSTGRES_PORT}
+  #      - NODE_ENV=${NODE_ENV}
+  #    ports:
+  #      - '127.0.0.1:3000:3000'
+  #    networks:
+  #      - microservice-network
+  #    depends_on:
+  #      - db
+  #    volumes:
+  #      - './micro:/var/www/api/micro'
 
   # DataBase
   db:

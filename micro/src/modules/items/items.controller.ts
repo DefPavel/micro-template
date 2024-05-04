@@ -14,6 +14,8 @@ export class ItemsController {
 
   @MessagePattern({ role: 'item', cmd: 'get-by-id' })
   getItemById(id: string) {
+    console.log('tet');
+
     return this.itemsService.getItemById(+id);
   }
 }

@@ -9,9 +9,6 @@ async function bootstrap() {
   const app = await NestFactory.createMicroservice(AppModule, {
     transport: Transport.TCP,
     logger: logger,
-    options: {
-      port: 8080,
-    },
   });
   app.useGlobalPipes(new ValidationPipe());
   await app.listen().then(() => logger.log('Microservice is listening'));

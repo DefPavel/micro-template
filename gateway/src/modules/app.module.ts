@@ -10,9 +10,6 @@ import { ITEM_MICROSERVICE } from '../common/constants';
       {
         name: ITEM_MICROSERVICE,
         transport: Transport.TCP,
-        options: {
-          port: 8080,
-        },
       },
     ]),
   ],
